@@ -3,23 +3,34 @@ package model;
 import java.util.Objects;
 
 public class Task {
+    protected Integer id;
     protected String name;
     protected String description;
     protected TaskStatus status;
     protected TaskType taskType;
 
-    public Task(String name, String description){
+    public Task(Integer id, String name, String description){
+        if(id == null)
+            id = 0;
+
+        this.id = id.intValue();
         this.name = name;
         this.description = description;
         this.status = TaskStatus.NEW;
         taskType = TaskType.TASK;
     }
 
-    public Task(Task task){
-        this.name = task.getName();
-        this.description = task.getDescription();
+    public Task(Integer id, Task task){
+        this(id, task.getName(), task.getDescription());
+
         this.status = task.getStatus();
         taskType = TaskType.TASK;
+    }
+
+    public Integer getId() {
+        if(id == null)
+            return 0;
+        return id;
     }
 
     public void setName(String name) {
@@ -57,14 +68,15 @@ public class Task {
         if(this.getClass() != obj.getClass()) return false;
         Task otherTask = (Task) obj;
 
-        return Objects.equals(name, otherTask.name) && Objects.equals(description, otherTask.description) &&
-                Objects.equals(status, otherTask.status);
+        return  Objects.equals(id, otherTask.id) && Objects.equals(name, otherTask.name) &&
+                Objects.equals(description, otherTask.description) && Objects.equals(status, otherTask.status);
     }
 
     @Override
     public String toString(){
         return "Task{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + status.toString() + '\'' +
                 '}';

@@ -7,14 +7,14 @@ public class EpicTask extends Task {
 
     protected ArrayList<SubTask> subTasks;
 
-    public EpicTask(String name, String description) {
-        super(name, description);
+    public EpicTask(Integer id,String name, String description) {
+        super(id , name, description);
         taskType = TaskType.EPIC_TASK;
         subTasks = new ArrayList<>();
     }
 
-    public EpicTask(Task task) {
-        super(task);
+    public EpicTask(Integer id, Task task) {
+        super(id ,task);
         taskType = TaskType.EPIC_TASK;
         subTasks = new ArrayList<>();
     }
@@ -54,9 +54,6 @@ public class EpicTask extends Task {
                 }
         }
 
-
-
-
         return result;
     }
 
@@ -67,14 +64,18 @@ public class EpicTask extends Task {
         if(this.getClass() != obj.getClass()) return false;
         EpicTask otherEpicTask = (EpicTask) obj;
 
-        return Objects.equals(name, otherEpicTask.name) && Objects.equals(description, otherEpicTask.description) &&
-                Objects.equals(status, otherEpicTask.status) && Objects.equals(subTasks, otherEpicTask.subTasks);
+        return  Objects.equals(id, otherEpicTask.id) &&
+                Objects.equals(name, otherEpicTask.name) &&
+                Objects.equals(description, otherEpicTask.description) &&
+                Objects.equals(getStatus(), otherEpicTask.getStatus()) &&
+                Objects.equals(subTasks, otherEpicTask.subTasks);
     }
 
     @Override
     public String toString(){
         return "EpicTask{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", status='" + getStatus().toString() + '\'' +
                 ", subTask.length='" + subTasks.size() + '\'' +

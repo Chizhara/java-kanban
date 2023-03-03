@@ -5,14 +5,14 @@ import java.util.Objects;
 public class SubTask extends Task{
     protected EpicTask epicTask;
 
-    public SubTask(String name, String description, EpicTask epicTask) {
-        super(name, description);
+    public SubTask(Integer id, String name, String description, EpicTask epicTask) {
+        super(id ,name, description);
         this.epicTask = epicTask;
         taskType = TaskType.SUB_TASK;
     }
 
-    public SubTask(SubTask task) {
-        super(task);
+    public SubTask(Integer id ,SubTask task) {
+        super(id, task);
         this.epicTask = task.epicTask;
         taskType = TaskType.SUB_TASK;
     }
@@ -32,8 +32,9 @@ public class SubTask extends Task{
         if(this.getClass() != obj.getClass()) return false;
         SubTask otherSubTask = (SubTask) obj;
 
-        return Objects.equals(name, otherSubTask.name) && Objects.equals(description, otherSubTask.description) &&
-                Objects.equals(status, otherSubTask.status) && Objects.equals(epicTask, otherSubTask.epicTask);
+        return Objects.equals(id, otherSubTask.id) && Objects.equals(name, otherSubTask.name) &&
+               Objects.equals(description, otherSubTask.description) && Objects.equals(status, otherSubTask.status) &&
+               Objects.equals(epicTask, otherSubTask.epicTask);
     }
 
     @Override
