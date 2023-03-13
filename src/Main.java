@@ -1,3 +1,5 @@
+import manager.InMemoryTaskManager;
+import manager.Managers;
 import manager.TaskManager;
 import model.EpicTask;
 import model.SubTask;
@@ -10,19 +12,23 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager taskManager = new TaskManager();
-        createTasks(taskManager);
-        printTasks(taskManager);
-        changeTasks(taskManager);
-        printTasks(taskManager);
-        deleteTasks(taskManager);
-        printTasks(taskManager);
+        TaskManager inMemoryTaskManager = Managers.getDefault();
+        createTasks(inMemoryTaskManager);
+        printTasks(inMemoryTaskManager);
+        changeTasks(inMemoryTaskManager);
+        printTasks(inMemoryTaskManager);
+        deleteTasks(inMemoryTaskManager);
+        printTasks(inMemoryTaskManager);
 
-        taskManager.clearTasks();
-        printTasks(taskManager);
+        inMemoryTaskManager.clearTasks();
+        printTasks(inMemoryTaskManager);
+
+        for(Task task : inMemoryTaskManager.getHistory())
+            System.out.println(task);
+
     }
 
-    private static void createTasks(TaskManager taskManager){
+    private static void createTasks(TaskManager inMemoryTaskManager){
         Task taskA = new Task(null ,"TaskA", "NormalTask");
         Task taskB = new Task(null ,"TaskB", "NormalTask");
         taskB.setStatus(TaskStatus.DONE);
@@ -30,42 +36,42 @@ public class Main {
         EpicTask epicTaskA = new EpicTask(null ,"EpicTaskA", "EpicTask");
         EpicTask epicTaskB = new EpicTask(null ,"EpicTaskB", "EpicTask");
 
-        SubTask subTaskA = new SubTask(null ,"SubTaskA", "SubTask", epicTaskA);
-        SubTask subTaskB = new SubTask(null ,"SubTaskB", "SubTask", epicTaskA);
+        SubTask subTaskA = new SubTask(null ,"SubTaskA", "SubTask", epicTaskA.getId());
+        SubTask subTaskB = new SubTask(null ,"SubTaskB", "SubTask", epicTaskA.getId());
 
-        taskManager.tryCreateTask(taskA);
-        taskManager.tryCreateTask(taskB);
-        taskManager.tryCreateTask(epicTaskA);
-        taskManager.tryCreateTask(epicTaskB);
+        inMemoryTaskManager.tryCreateTask(taskA);
+        inMemoryTaskManager.tryCreateTask(taskB);
+        inMemoryTaskManager.tryCreateTask(epicTaskA);
+        inMemoryTaskManager.tryCreateTask(epicTaskB);
 
-        for(Task task : taskManager.getTasks().values())
+        for(Task task : inMemoryTaskManager.getTasks().values())
             if(task.getName().equals("EpicTaskA"))
                 epicTaskA = (EpicTask) task;
 
-        subTaskA.setEpicTask(epicTaskA);
-        subTaskB.setEpicTask(epicTaskA);
+        subTaskA.setEpicTaskId(epicTaskA.getId());
+        subTaskB.setEpicTaskId(epicTaskA.getId());
 
-        taskManager.tryCreateTask(subTaskA);
-        taskManager.tryCreateTask(subTaskB);
+        inMemoryTaskManager.tryCreateTask(subTaskA);
+        inMemoryTaskManager.tryCreateTask(subTaskB);
     }
 
-    private static void printTasks(TaskManager taskManager){
-        for(Task task : taskManager.getTasks().values())
+    private static void printTasks(TaskManager inMemoryTaskManager){
+        for(Task task : inMemoryTaskManager.getTasks().values())
             System.out.println(task);
 
-        for(int i :  taskManager.getTasks().keySet())
+        for(int i :  inMemoryTaskManager.getTasks().keySet())
             System.out.println(i);
 
-        System.out.println("\n" + taskManager + "\n");
+        System.out.println("\n" + inMemoryTaskManager + "\n");
     }
 
-    private static void deleteTasks(TaskManager taskManager){
-        taskManager.removeTask(7);
-        taskManager.removeTask(3);
+    private static void deleteTasks(TaskManager inMemoryTaskManager){
+        inMemoryTaskManager.removeTask(7);
+        inMemoryTaskManager.removeTask(3);
     }
 
-    private static void changeTasks(TaskManager taskManager) {
-        HashMap<Integer, Task> tasks = taskManager.getTasks();
+    private static void changeTasks(TaskManager inMemoryTaskManager) {
+        HashMap<Integer, Task> tasks = inMemoryTaskManager.getTasks();
 
         Task taskA = new Task(tasks.get(1).getId() ,tasks.get(1));
         EpicTask taskB = new EpicTask(tasks.get(3).getId(), (EpicTask) (tasks.get(3)));
@@ -75,11 +81,11 @@ public class Main {
         taskC.setStatus(TaskStatus.DONE);
         taskB.setName("EpicTaskA Changed");
 
-        SubTask subTask = new SubTask(null ,"SubTaskC", "SubTask", (EpicTask) tasks.get(4));
+        SubTask subTask = new SubTask(null ,"SubTaskC", "SubTask", tasks.get(4).getId());
 
-        System.out.println(taskManager.updateTask(taskA));
-        System.out.println(taskManager.updateTask(taskB));
-        System.out.println(taskManager.updateTask(taskC));
-        System.out.println(taskManager.tryCreateTask(subTask));
+        System.out.println(inMemoryTaskManager.updateTask(taskA));
+        System.out.println(inMemoryTaskManager.updateTask(taskB));
+        System.out.println(inMemoryTaskManager.updateTask(taskC));
+        System.out.println(inMemoryTaskManager.tryCreateTask(subTask));
     }
 }

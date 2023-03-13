@@ -3,26 +3,26 @@ package model;
 import java.util.Objects;
 
 public class SubTask extends Task{
-    protected EpicTask epicTask;
+    protected Integer epicTaskId;
 
-    public SubTask(Integer id, String name, String description, EpicTask epicTask) {
+    public SubTask(Integer id, String name, String description, Integer epicTaskId) {
         super(id ,name, description);
-        this.epicTask = epicTask;
+        this.epicTaskId = epicTaskId;
         taskType = TaskType.SUB_TASK;
     }
 
     public SubTask(Integer id ,SubTask task) {
         super(id, task);
-        this.epicTask = task.epicTask;
+        this.epicTaskId = task.epicTaskId;
         taskType = TaskType.SUB_TASK;
     }
 
-    public void setEpicTask(EpicTask epicTask) {
-        this.epicTask = epicTask;
+    public void setEpicTaskId(Integer epicTaskId) {
+        this.epicTaskId = epicTaskId;
     }
 
-    public EpicTask getEpicTask() {
-        return epicTask;
+    public Integer getEpicTaskId() {
+        return epicTaskId;
     }
 
     @Override
@@ -34,13 +34,13 @@ public class SubTask extends Task{
 
         return Objects.equals(id, otherSubTask.id) && Objects.equals(name, otherSubTask.name) &&
                Objects.equals(description, otherSubTask.description) && Objects.equals(status, otherSubTask.status) &&
-               Objects.equals(epicTask, otherSubTask.epicTask);
+               Objects.equals(epicTaskId, otherSubTask.epicTaskId);
     }
 
     @Override
     public String toString(){
         String result = super.toString().replace("Task{","SubTask{");
-        result = result.replace("}", ", EpicTask='" + epicTask + '\'');
+        result = result.replace("}", ", EpicTask='" + epicTaskId + '\'');
         return result;
     }
 }

@@ -13,7 +13,7 @@ public class EpicTask extends Task {
         subTasks = new ArrayList<>();
     }
 
-    public EpicTask(Integer id, Task task) {
+    public EpicTask(Integer id, EpicTask task) {
         super(id ,task);
         taskType = TaskType.EPIC_TASK;
         subTasks = new ArrayList<>();
