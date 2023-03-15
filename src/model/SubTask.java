@@ -43,4 +43,9 @@ public class SubTask extends Task{
         result = result.replace("}", ", EpicTask='" + epicTaskId + '\'');
         return result;
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), epicTaskId);
+    }
 }

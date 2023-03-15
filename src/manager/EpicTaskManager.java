@@ -7,10 +7,25 @@ import java.util.HashMap;
 
 public class EpicTaskManager {
 
-    public HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
-    public HashMap<Integer, SubTask> subTasks = new HashMap<>();
+    private final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
+    private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    ManagerSeq seq;
+    private final ManagerSeq seq;
+
+    public void updateSubTasksListOfEpic(EpicTask epicTaskUpdated, ArrayList<SubTask> subTasksDonor) {
+        if(!epicTaskUpdated.getSubTasks().equals(subTasksDonor))
+            return;
+
+        for(SubTask subTask : subTasksDonor)
+            if(subTasks.containsKey(subTask.getId()))
+                updateEpicSubTask(subTask, epicTaskUpdated);
+    }
+
+    public void updateEpicSubTask(SubTask subTask, EpicTask epicTaskUpdated) {
+        epicTasks.get(subTask.getEpicTaskId()).removeSubTask(subTask);
+        subTask.setEpicTaskId(epicTaskUpdated.getId());
+        epicTaskUpdated.addSubTask(subTask);
+    }
 
     public HashMap<Integer, EpicTask> getEpicTasks() {
         return epicTasks;
@@ -24,41 +39,38 @@ public class EpicTaskManager {
         this.seq = seq;
     }
 
-    public Task tryCreateSubTask(SubTask subTask) {
+    public SubTask addSubTask(SubTask subTask) {
         if(epicTasks.containsKey(subTask.getEpicTaskId())){
-            EpicTask epicTask = epicTasks.get(subTask.getEpicTaskId());
-            SubTask concreteSubTask = generateSubTask(subTask, epicTask);
-            return addTask(concreteSubTask);
-        }
+            subTask.setId(seq.getNextSeq());
 
+            EpicTask epicTask = epicTasks.get(subTask.getEpicTaskId());
+            epicTask.addSubTask(subTask);
+
+            subTasks.put(subTask.getId(), subTask);
+            return subTask;
+        }
         return null;
     }
 
-    public Task addTask(Task task) {
-        switch(task.getTaskType()) {
-            case EPIC_TASK:
-                EpicTask epicTaskToAdd = new EpicTask(seq.getNextSeq(), (EpicTask) task);
-                epicTasks.put(epicTaskToAdd.getId() , epicTaskToAdd);
-                return epicTaskToAdd;
-            case SUB_TASK:
-                subTasks.put(task.getId(), (SubTask) task);
-                break;
-            default:
-                return null;
-        }
-        return task;
+    public EpicTask addEpicTask(EpicTask epicTask) {
+        epicTask.setId(seq.getNextSeq());
+        epicTasks.put(epicTask.getId() , epicTask);
+        return epicTask;
     }
 
-    public void removeSubTask(SubTask subTask) {
-        subTask = subTasks.get(subTask.getId());
+    public SubTask removeSubTask(Integer subTaskId) {
+        SubTask subTask = subTasks.get(subTaskId);
+
+        if(subTask == null)
+            return  null;
 
         epicTasks.get(subTask.getEpicTaskId()).removeSubTask(subTask);
-        subTasks.remove(subTask.getId());
+        return subTasks.remove(subTask.getId());
     }
 
-    public void removeEpicTask(EpicTask epicTask) {
-        removeSubTasksOfEpic(epicTask);
-        epicTasks.remove(epicTask.getId());
+    public EpicTask removeEpicTask(Integer epicTaskId) {
+        removeSubTasksOfEpic(epicTasks.get(epicTaskId));
+        return epicTasks.remove(epicTaskId);
     }
 
     public void removeSubTasksOfEpic(EpicTask epicTask) {
@@ -66,18 +78,15 @@ public class EpicTaskManager {
             subTasks.remove(subTask.getId());
     }
 
-    public void clear() {
-        epicTasks.clear();
+    public void clearEpicTasks() {
         subTasks.clear();
+        epicTasks.clear();
     }
 
-    private SubTask generateSubTask(SubTask subTask, EpicTask epicTask) {
-        SubTask concreteSubTask = new SubTask(seq.getNextSeq(), subTask);
-        concreteSubTask.setEpicTaskId(epicTask.getId());
+    public void clearSubTasks() {
+        subTasks.clear();
 
-        epicTask.addSubTask(concreteSubTask);
-        concreteSubTask.setEpicTaskId(epicTask.getId());
-
-        return concreteSubTask;
+        for(EpicTask epicTask : epicTasks.values())
+            epicTask.getSubTasks().clear();
     }
 }

@@ -1,4 +1,3 @@
-import manager.InMemoryTaskManager;
 import manager.Managers;
 import manager.TaskManager;
 import model.EpicTask;
@@ -6,7 +5,7 @@ import model.SubTask;
 import model.Task;
 import model.TaskStatus;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -21,6 +20,8 @@ public class Main {
         printTasks(inMemoryTaskManager);
 
         inMemoryTaskManager.clearTasks();
+        inMemoryTaskManager.clearEpicTasks();
+
         printTasks(inMemoryTaskManager);
 
         for(Task task : inMemoryTaskManager.getHistory())
@@ -39,53 +40,59 @@ public class Main {
         SubTask subTaskA = new SubTask(null ,"SubTaskA", "SubTask", epicTaskA.getId());
         SubTask subTaskB = new SubTask(null ,"SubTaskB", "SubTask", epicTaskA.getId());
 
-        inMemoryTaskManager.tryCreateTask(taskA);
-        inMemoryTaskManager.tryCreateTask(taskB);
-        inMemoryTaskManager.tryCreateTask(epicTaskA);
-        inMemoryTaskManager.tryCreateTask(epicTaskB);
+        inMemoryTaskManager.addTask(taskA);
+        inMemoryTaskManager.addTask(taskB);
+        inMemoryTaskManager.addEpicTask(epicTaskA);
+        inMemoryTaskManager.addEpicTask(epicTaskB);
 
-        for(Task task : inMemoryTaskManager.getTasks().values())
+        for(Task task : inMemoryTaskManager.getTasks())
             if(task.getName().equals("EpicTaskA"))
                 epicTaskA = (EpicTask) task;
 
         subTaskA.setEpicTaskId(epicTaskA.getId());
         subTaskB.setEpicTaskId(epicTaskA.getId());
 
-        inMemoryTaskManager.tryCreateTask(subTaskA);
-        inMemoryTaskManager.tryCreateTask(subTaskB);
+        inMemoryTaskManager.addSubTask(subTaskA);
+        inMemoryTaskManager.addSubTask(subTaskB);
     }
 
     private static void printTasks(TaskManager inMemoryTaskManager){
-        for(Task task : inMemoryTaskManager.getTasks().values())
+        for(Task task : inMemoryTaskManager.getTasks()){
             System.out.println(task);
-
-        for(int i :  inMemoryTaskManager.getTasks().keySet())
-            System.out.println(i);
+        }
+        for(Task task : inMemoryTaskManager.getEpicTasks()){
+            System.out.println(task);
+        }
+        for(Task task : inMemoryTaskManager.getSubTasks()){
+            System.out.println(task);
+        }
 
         System.out.println("\n" + inMemoryTaskManager + "\n");
     }
 
     private static void deleteTasks(TaskManager inMemoryTaskManager){
-        inMemoryTaskManager.removeTask(7);
-        inMemoryTaskManager.removeTask(3);
+        inMemoryTaskManager.removeSubTask(7);
+        inMemoryTaskManager.removeEpicTask(3);
     }
 
     private static void changeTasks(TaskManager inMemoryTaskManager) {
-        HashMap<Integer, Task> tasks = inMemoryTaskManager.getTasks();
+        ArrayList<Task> tasks = inMemoryTaskManager.getTasks();
+        tasks.addAll(inMemoryTaskManager.getEpicTasks());
+        tasks.addAll(inMemoryTaskManager.getSubTasks());
 
-        Task taskA = new Task(tasks.get(1).getId() ,tasks.get(1));
-        EpicTask taskB = new EpicTask(tasks.get(3).getId(), (EpicTask) (tasks.get(3)));
-        Task taskC = new SubTask(tasks.get(5).getId() ,(SubTask) tasks.get(5));
+        Task taskA = new Task(tasks.get(0).getId(), tasks.get(0));
+        EpicTask taskB = new EpicTask(tasks.get(2).getId(), (EpicTask) (tasks.get(2)));
+        Task taskC = new SubTask(tasks.get(4).getId(), (SubTask) tasks.get(4));
 
         taskA.setDescription("ChangedSubTask A");
         taskC.setStatus(TaskStatus.DONE);
         taskB.setName("EpicTaskA Changed");
 
-        SubTask subTask = new SubTask(null ,"SubTaskC", "SubTask", tasks.get(4).getId());
+        SubTask subTask = new SubTask(null ,"SubTaskC", "SubTask", tasks.get(3).getId());
 
         System.out.println(inMemoryTaskManager.updateTask(taskA));
         System.out.println(inMemoryTaskManager.updateTask(taskB));
         System.out.println(inMemoryTaskManager.updateTask(taskC));
-        System.out.println(inMemoryTaskManager.tryCreateTask(subTask));
+        System.out.println(inMemoryTaskManager.addSubTask(subTask));
     }
 }

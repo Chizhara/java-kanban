@@ -27,6 +27,10 @@ public class Task {
         taskType = TaskType.TASK;
     }
 
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public Integer getId() {
         if(id == null)
             return 0;
@@ -80,5 +84,10 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status.toString() + '\'' +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, status, taskType);
     }
 }

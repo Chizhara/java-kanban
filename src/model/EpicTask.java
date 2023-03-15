@@ -81,4 +81,9 @@ public class EpicTask extends Task {
                 ", subTask.length='" + subTasks.size() + '\'' +
                 '}';
     }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subTasks);
+    }
 }
