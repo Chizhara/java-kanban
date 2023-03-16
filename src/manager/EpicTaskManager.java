@@ -43,7 +43,7 @@ public class EpicTaskManager {
         return epicTask;
     }
 
-    public boolean updateEpicTask(EpicTask epicTaskDonor){
+    public boolean updateEpicTask(EpicTask epicTaskDonor) {
         EpicTask taskUpdated = epicTasks.get(epicTaskDonor.getId());
 
         if(taskUpdated == null)

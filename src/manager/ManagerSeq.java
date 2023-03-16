@@ -8,7 +8,7 @@ public class ManagerSeq {
         return seq;
     }
 
-    public int getNextSeq(){
+    public int getNextSeq() {
         return ++seq;
     }
 }

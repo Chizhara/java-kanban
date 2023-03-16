@@ -13,7 +13,7 @@ public class InMemoryTaskManager implements TaskManager {
     private final HistoryManager historyManager;
     private final EpicTaskManager epicTaskManager;
 
-    public InMemoryTaskManager(HistoryManager historyManager){
+    public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
         seq = new ManagerSeq();
         epicTaskManager = new EpicTaskManager(seq);

@@ -2,7 +2,7 @@ package model;
 
 import java.util.Objects;
 
-public class SubTask extends Task{
+public class SubTask extends Task {
     protected Integer epicTaskId;
 
     public SubTask(Integer id, String name, String description, Integer epicTaskId) {

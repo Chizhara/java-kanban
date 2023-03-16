@@ -23,11 +23,11 @@ public class EpicTask extends Task {
         return subTasks;
     }
 
-    public void addSubTask(SubTask subTask){
+    public void addSubTask(SubTask subTask) {
         subTasks.add(subTask);
     }
 
-    public void removeSubTask(SubTask subTask){
+    public void removeSubTask(SubTask subTask) {
         subTasks.remove(subTask);
     }
 
@@ -67,7 +67,7 @@ public class EpicTask extends Task {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "EpicTask{" +
                 "id=" + id +
                 ", name='" + name + '\'' +

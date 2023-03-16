@@ -29,7 +29,7 @@ public class Main {
 
     }
 
-    private static void createTasks(TaskManager inMemoryTaskManager){
+    private static void createTasks(TaskManager inMemoryTaskManager) {
         Task taskA = new Task(null ,"TaskA", "NormalTask");
         Task taskB = new Task(null ,"TaskB", "NormalTask");
         taskB.setStatus(TaskStatus.DONE);
@@ -56,21 +56,21 @@ public class Main {
         inMemoryTaskManager.addSubTask(subTaskB);
     }
 
-    private static void printTasks(TaskManager inMemoryTaskManager){
-        for(Task task : inMemoryTaskManager.getTasks()){
+    private static void printTasks(TaskManager inMemoryTaskManager) {
+        for(Task task : inMemoryTaskManager.getTasks()) {
             System.out.println(task);
         }
-        for(Task task : inMemoryTaskManager.getEpicTasks()){
+        for(Task task : inMemoryTaskManager.getEpicTasks()) {
             System.out.println(task);
         }
-        for(Task task : inMemoryTaskManager.getSubTasks()){
+        for(Task task : inMemoryTaskManager.getSubTasks()) {
             System.out.println(task);
         }
 
         System.out.println("\n" + inMemoryTaskManager + "\n");
     }
 
-    private static void deleteTasks(TaskManager inMemoryTaskManager){
+    private static void deleteTasks(TaskManager inMemoryTaskManager) {
         inMemoryTaskManager.removeSubTask(7);
         inMemoryTaskManager.removeEpicTask(3);
     }

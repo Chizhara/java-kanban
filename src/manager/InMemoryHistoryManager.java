@@ -5,7 +5,7 @@ import model.Task;
 import java.util.LinkedList;
 import java.util.List;
 
-public class InMemoryHistoryManager implements HistoryManager{
+public class InMemoryHistoryManager implements HistoryManager {
 
     private final LinkedList<Task> taskHistory = new LinkedList<>();
 

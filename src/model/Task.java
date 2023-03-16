@@ -83,7 +83,7 @@ public class Task {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Task{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
