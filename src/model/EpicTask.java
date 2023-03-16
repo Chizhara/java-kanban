@@ -33,28 +33,23 @@ public class EpicTask extends Task {
 
     @Override
     public TaskStatus getStatus() {
-        TaskStatus result = null;
         status = null;
 
         if(subTasks.isEmpty()) {
-            result = TaskStatus.NEW;
             status = TaskStatus.NEW;
-        } else {
+            return TaskStatus.NEW;
+        } else
             for(SubTask subTask : subTasks)
-                if(subTask.getStatus() == TaskStatus.DONE){
-                    result = TaskStatus.DONE;
+                if(subTask.getStatus() == TaskStatus.DONE)
                     status = TaskStatus.DONE;
-                } else if(subTask.getStatus() == TaskStatus.IN_PROGRESS || subTask.getStatus() != TaskStatus.DONE && status == TaskStatus.DONE){
-                    result = TaskStatus.IN_PROGRESS;
+                else if(subTask.getStatus() == TaskStatus.IN_PROGRESS || subTask.getStatus() != TaskStatus.DONE && status == TaskStatus.DONE) {
                     status = TaskStatus.IN_PROGRESS;
                     break;
-                } else if(subTask.getStatus() == TaskStatus.NEW && status != TaskStatus.DONE){
-                    result = TaskStatus.NEW;
-                    status = TaskStatus.NEW;
                 }
-        }
+                else if(subTask.getStatus() == TaskStatus.NEW && status != TaskStatus.DONE)
+                    status = TaskStatus.NEW;
 
-        return result;
+        return status;
     }
 
     @Override

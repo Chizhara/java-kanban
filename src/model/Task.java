@@ -65,6 +65,12 @@ public class Task {
         return taskType;
     }
 
+    public void updateTaskValues(Task taskDonor) {
+        this.setName(taskDonor.getName());
+        this.setDescription(taskDonor.getDescription());
+        this.setStatus(taskDonor.getStatus());
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(this == obj) return true;

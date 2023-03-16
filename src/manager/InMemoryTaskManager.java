@@ -83,52 +83,26 @@ public class InMemoryTaskManager implements TaskManager {
     }
 
     @Override
-    public boolean updateTask(Task TaskDonor) {
+    public boolean updateTask(Task taskDonor) {
         HashMap<Integer, Task> tasks = this.tasks;
+        Task taskUpdated = tasks.get(taskDonor.getId());
 
-        if(!tasks.containsKey(TaskDonor.getId()))
-            return false;
-        if(TaskDonor.getTaskType() != TaskType.TASK)
+        if(taskUpdated == null)
             return false;
 
-        Task taskUpdated = tasks.get(TaskDonor.getId());
-        updateTaskValues(taskUpdated, TaskDonor);
+        taskUpdated.updateTaskValues(taskDonor);
 
         return true;
     }
 
     @Override
     public boolean updateEpicTask(EpicTask epicTaskDonor) {
-        HashMap<Integer, EpicTask> epicTasks = epicTaskManager.getEpicTasks();
-
-        if(!epicTasks.containsKey(epicTaskDonor.getId()))
-            return false;
-        if(epicTaskDonor.getTaskType() != TaskType.EPIC_TASK)
-            return false;
-
-        EpicTask taskUpdated = epicTasks.get(epicTaskDonor.getId());
-
-        updateTaskValues(taskUpdated, epicTaskDonor);
-        epicTaskManager.updateSubTasksListOfEpic(taskUpdated, epicTaskDonor.getSubTasks());
-
-        return true;
+        return epicTaskManager.updateEpicTask(epicTaskDonor);
     }
 
     @Override
     public boolean updateSubTask(SubTask subTaskDonor) {
-        HashMap<Integer, SubTask> subTasks = epicTaskManager.getSubTasks();
-
-        if(!subTasks.containsKey(subTaskDonor.getId()))
-            return false;
-        if(subTaskDonor.getTaskType() != TaskType.SUB_TASK)
-            return false;
-
-        SubTask taskUpdated = subTasks.get(subTaskDonor.getId());
-
-        updateTaskValues(taskUpdated, subTaskDonor);
-        epicTaskManager.updateEpicSubTask(taskUpdated, epicTaskManager.getEpicTasks().get(subTaskDonor.getEpicTaskId()));
-
-        return true;
+        return epicTaskManager.updateSubTask(subTaskDonor);
     }
 
     @Override
@@ -171,12 +145,6 @@ public class InMemoryTaskManager implements TaskManager {
     @Override
     public SubTask addSubTask(SubTask task) {
         return epicTaskManager.addSubTask(task);
-    }
-
-    private void updateTaskValues(Task taskUpdated,Task taskDonor){
-        taskUpdated.setName(taskDonor.getName());
-        taskUpdated.setDescription(taskDonor.getDescription());
-        taskUpdated.setStatus(taskDonor.getStatus());
     }
 
     @Override
