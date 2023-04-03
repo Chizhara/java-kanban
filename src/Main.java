@@ -5,7 +5,7 @@ import model.SubTask;
 import model.Task;
 import model.TaskStatus;
 
-import java.util.ArrayList;
+import java.util.Random;
 
 public class Main {
 
@@ -14,8 +14,10 @@ public class Main {
         TaskManager inMemoryTaskManager = Managers.getDefault();
         createTasks(inMemoryTaskManager);
         printTasks(inMemoryTaskManager);
-        changeTasks(inMemoryTaskManager);
+
+        callTasks(inMemoryTaskManager);
         printTasks(inMemoryTaskManager);
+
         deleteTasks(inMemoryTaskManager);
         printTasks(inMemoryTaskManager);
 
@@ -24,36 +26,35 @@ public class Main {
 
         printTasks(inMemoryTaskManager);
 
-        for(Task task : inMemoryTaskManager.getHistory())
-            System.out.println(task);
-
     }
 
     private static void createTasks(TaskManager inMemoryTaskManager) {
         Task taskA = new Task(null ,"TaskA", "NormalTask");
         Task taskB = new Task(null ,"TaskB", "NormalTask");
-        taskB.setStatus(TaskStatus.DONE);
 
         EpicTask epicTaskA = new EpicTask(null ,"EpicTaskA", "EpicTask");
         EpicTask epicTaskB = new EpicTask(null ,"EpicTaskB", "EpicTask");
 
         SubTask subTaskA = new SubTask(null ,"SubTaskA", "SubTask", epicTaskA.getId());
         SubTask subTaskB = new SubTask(null ,"SubTaskB", "SubTask", epicTaskA.getId());
+        SubTask subTaskC = new SubTask(null ,"SubTaskC", "SubTask", epicTaskA.getId());
 
         inMemoryTaskManager.addTask(taskA);
         inMemoryTaskManager.addTask(taskB);
         inMemoryTaskManager.addEpicTask(epicTaskA);
         inMemoryTaskManager.addEpicTask(epicTaskB);
 
-        for(Task task : inMemoryTaskManager.getTasks())
+        for(EpicTask task : inMemoryTaskManager.getEpicTasks())
             if(task.getName().equals("EpicTaskA"))
-                epicTaskA = (EpicTask) task;
+                epicTaskA = task;
 
         subTaskA.setEpicTaskId(epicTaskA.getId());
         subTaskB.setEpicTaskId(epicTaskA.getId());
+        subTaskC.setEpicTaskId(epicTaskA.getId());
 
         inMemoryTaskManager.addSubTask(subTaskA);
         inMemoryTaskManager.addSubTask(subTaskB);
+        inMemoryTaskManager.addSubTask(subTaskC);
     }
 
     private static void printTasks(TaskManager inMemoryTaskManager) {
@@ -75,24 +76,25 @@ public class Main {
         inMemoryTaskManager.removeEpicTask(3);
     }
 
-    private static void changeTasks(TaskManager inMemoryTaskManager) {
-        ArrayList<Task> tasks = inMemoryTaskManager.getTasks();
-        tasks.addAll(inMemoryTaskManager.getEpicTasks());
-        tasks.addAll(inMemoryTaskManager.getSubTasks());
+    private static void callTasks(TaskManager inMemoryTaskManager) {
+        Random rand = new Random();
 
-        Task taskA = new Task(tasks.get(0).getId(), tasks.get(0));
-        EpicTask taskB = new EpicTask(tasks.get(2).getId(), (EpicTask) (tasks.get(2)));
-        Task taskC = new SubTask(tasks.get(4).getId(), (SubTask) tasks.get(4));
+        for(int i = 0; i < 20; i++){
+            int randId = rand.nextInt(7) + 1;
 
-        taskA.setDescription("ChangedSubTask A");
-        taskC.setStatus(TaskStatus.DONE);
-        taskB.setName("EpicTaskA Changed");
+            Task task = inMemoryTaskManager.getTask(randId);
 
-        SubTask subTask = new SubTask(null ,"SubTaskC", "SubTask", tasks.get(3).getId());
+            if(task == null)
+                task = inMemoryTaskManager.getSubTask(randId);
+            if(task == null)
+                task = inMemoryTaskManager.getEpicTask(randId);
+            System.out.println(task);
 
-        System.out.println(inMemoryTaskManager.updateTask(taskA));
-        System.out.println(inMemoryTaskManager.updateTask(taskB));
-        System.out.println(inMemoryTaskManager.updateTask(taskC));
-        System.out.println(inMemoryTaskManager.addSubTask(subTask));
+            System.out.println("\tHistory");
+            for(Task taskb : inMemoryTaskManager.getHistory())
+                System.out.println(taskb);
+
+            System.out.println("\n");
+        }
     }
 }
