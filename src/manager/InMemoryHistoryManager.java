@@ -5,13 +5,16 @@ import model.Task;
 import java.util.*;
 
 public class InMemoryHistoryManager implements HistoryManager {
+    HashMap<Integer, Node<Task>> nodes = new HashMap<>();
 
-    private final CustomLinkedList tasksHistory = new CustomLinkedList();
+    private final CustomLinkedList<Task> tasksHistory = new CustomLinkedList<>();
 
     @Override
     public void add(Task task) {
-        tasksHistory.removeNode(task.getId());
-        tasksHistory.linkLast(task);
+        if(nodes.containsKey(task.getId())) {
+            remove(task.getId());
+        }
+        nodes.put(task.getId() ,tasksHistory.linkLast(task));
     }
 
     @Override
@@ -21,67 +24,56 @@ public class InMemoryHistoryManager implements HistoryManager {
 
     @Override
     public void remove(int taskId){
-        tasksHistory.removeNode(taskId);
-    }
-}
-
-class CustomLinkedList {
-    HashMap<Integer, Node> nodeMap = new HashMap<>();
-
-    private int size = 0;
-
-    Integer head;
-    Integer tail;
-
-    public int getSize() {
-        return size;
+        tasksHistory.removeNode(nodes.get(taskId));
     }
 
-    public void linkLast(Task task) {
-        Node node;
-        if(head == null) {
-            node = new Node(null, task, null);
-            head = task.getId();
-            tail = task.getId();
-        } else
-            node = new Node(nodeMap.get(tail), task, null);
+    private static class CustomLinkedList<T> {
+        private int size = 0;
 
-        nodeMap.put(task.getId(), node);
-        nodeMap.get(tail).next = node;
-        tail = node.data.getId();
-        size++;
-    }
+        private Node<T> head;
+        private Node<T> tail;
 
-    public List<Task> getTasks(int elementsCount) {
-        List<Task> resultCollection = new ArrayList<>();
-        Node buf = nodeMap.get(tail);
-
-        for(int i = 0; i < elementsCount && i < size; i++) {
-            resultCollection.add(buf.data);
-            buf = buf.prev;
+        public int getSize() {
+            return size;
         }
 
-        return resultCollection;
-    }
+        public Node<T> linkLast(T element) {
+            final Node<T> newNode = new Node<>(tail, element, null);
 
-    public void removeNode(int taskId) {
-        if(!nodeMap.containsKey(taskId))
-            return;
+            if (head == null) {
+                head = newNode;
+            } else {
+                tail.setNext(newNode);
+            }
+            tail = newNode;
+            size++;
 
-        Node concreteNode = nodeMap.get(taskId);
+            return tail;
+        }
 
-        if(concreteNode.prev != null)
-            concreteNode.prev.next = concreteNode.next;
-        else
-            head = concreteNode.next.data.getId();
+        public List<T> getTasks(int elementsCount) {
+            List<T> resultCollection = new ArrayList<>();
+            Node<T> node = tail;
+            for(int i = 0; i < elementsCount && i < size; i++) {
+                resultCollection.add((T) node.getData());
+                node = node.getPrev();
+            }
 
-        if(concreteNode.next != null)
-            concreteNode.next.prev = concreteNode.prev;
-        else
-            tail = concreteNode.prev.data.getId();
+            return resultCollection;
+        }
 
-        nodeMap.remove(taskId);
-        size--;
+        public void removeNode(Node<T> removedNode) {
+            if(removedNode.getPrev() != null)
+                removedNode.getPrev().setNext(removedNode.getNext());
+            else
+                head = removedNode.getNext();
+
+            if(removedNode.getNext() != null)
+                removedNode.getNext().setPrev(removedNode.getPrev());
+            else
+                tail = removedNode.getPrev();
+            size--;
+        }
     }
 }
 

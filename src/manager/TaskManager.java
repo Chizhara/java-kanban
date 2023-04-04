@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 
 public interface TaskManager {
-    ArrayList<EpicTask> getEpicTasks();
+    List<EpicTask> getEpicTasks();
 
-    ArrayList<SubTask> getSubTasks();
+    List<SubTask> getSubTasks();
 
     void clearTasks();
 
@@ -37,11 +37,11 @@ public interface TaskManager {
 
     EpicTask removeEpicTask(int taskId);
 
-    ArrayList<SubTask> getSubTasksOfEpic(Integer epicTaskId);
+    List<SubTask> getSubTasksOfEpic(Integer epicTaskId);
 
     public List<Task> getHistory();
 
-    ArrayList<Task> getTasks();
+    List<Task> getTasks();
 
     Task addTask(Task task);
 
