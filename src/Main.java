@@ -1,9 +1,9 @@
+import manager.FileBackedTasksManager;
 import manager.Managers;
 import manager.TaskManager;
 import model.EpicTask;
 import model.SubTask;
 import model.Task;
-import model.TaskStatus;
 
 import java.util.Random;
 
@@ -11,7 +11,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.out.println("Поехали!");
-        TaskManager inMemoryTaskManager = Managers.getDefault();
+        FileBackedTasksManager inMemoryTaskManager = new FileBackedTasksManager(Managers.getDefaultHistory(), "filereader.txt");
         createTasks(inMemoryTaskManager);
         printTasks(inMemoryTaskManager);
 
@@ -25,6 +25,8 @@ public class Main {
         inMemoryTaskManager.clearEpicTasks();
 
         printTasks(inMemoryTaskManager);
+
+
 
     }
 

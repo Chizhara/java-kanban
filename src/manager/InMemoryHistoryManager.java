@@ -55,7 +55,7 @@ public class InMemoryHistoryManager implements HistoryManager {
             List<T> resultCollection = new ArrayList<>();
             Node<T> node = tail;
             for(int i = 0; i < elementsCount && i < size; i++) {
-                resultCollection.add((T) node.getData());
+                resultCollection.add(node.getData());
                 node = node.getPrev();
             }
 
