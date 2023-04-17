@@ -5,6 +5,7 @@ import model.EpicTask;
 import model.SubTask;
 import model.Task;
 
+import java.io.File;
 import java.util.Random;
 
 public class Main {
@@ -18,16 +19,10 @@ public class Main {
         callTasks(inMemoryTaskManager);
         printTasks(inMemoryTaskManager);
 
-        deleteTasks(inMemoryTaskManager);
-        printTasks(inMemoryTaskManager);
-
-        inMemoryTaskManager.clearTasks();
-        inMemoryTaskManager.clearEpicTasks();
-
-        printTasks(inMemoryTaskManager);
-
-
-
+        File file = new File("filereader.txt");
+        System.out.println("Считывание из файла");
+        FileBackedTasksManager fileBackedTasksManagerSecond = FileBackedTasksManager.loadFromFile(file);
+        printTasks(fileBackedTasksManagerSecond);
     }
 
     private static void createTasks(TaskManager inMemoryTaskManager) {
@@ -71,6 +66,10 @@ public class Main {
         }
 
         System.out.println("\n" + inMemoryTaskManager + "\n");
+
+        System.out.println("\tHistory");
+        for(Task taskb : inMemoryTaskManager.getHistory())
+            System.out.println(taskb);
     }
 
     private static void deleteTasks(TaskManager inMemoryTaskManager) {
