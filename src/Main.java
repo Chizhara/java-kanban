@@ -92,8 +92,8 @@ public class Main {
             System.out.println(task);
 
             System.out.println("\tHistory");
-            for(Task taskb : inMemoryTaskManager.getHistory())
-                System.out.println(taskb);
+            for(Task taskH : inMemoryTaskManager.getHistory())
+                System.out.println(taskH);
 
             System.out.println("\n");
         }

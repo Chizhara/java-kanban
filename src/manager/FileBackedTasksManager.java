@@ -2,33 +2,33 @@ package manager;
 
 import dao.TaskCSVLoader;
 import dao.TaskCSVSaver;
+import exceptions.ManagerSaveException;
 import model.*;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileBackedTasksManager implements TaskManager {
+public class FileBackedTasksManager extends InMemoryTaskManager {
     private final String fileName;
-    private final InMemoryTaskManager inMemoryTaskManager;
     public FileBackedTasksManager(HistoryManager historyManager, String fileName) {
-        inMemoryTaskManager = new InMemoryTaskManager(historyManager);
+        super(historyManager);
         this.fileName = fileName;
     }
 
     @Override
     public List<Task> getTasks() {
-        return inMemoryTaskManager.getTasks();
+        return super.getTasks();
     }
 
     @Override
     public List<EpicTask> getEpicTasks() {
-        return inMemoryTaskManager.getEpicTasks();
+        return super.getEpicTasks();
     }
 
     @Override
     public List<SubTask> getSubTasks() {
-        return inMemoryTaskManager.getSubTasks();
+        return super.getSubTasks();
     }
 
     public List<Task> getAllTasks() {
@@ -40,114 +40,114 @@ public class FileBackedTasksManager implements TaskManager {
 
     @Override
     public List<SubTask> getSubTasksOfEpic(Integer epicTaskId) {
-        return inMemoryTaskManager.getSubTasksOfEpic(epicTaskId);
+        return super.getSubTasksOfEpic(epicTaskId);
     }
 
     @Override
     public void clearTasks() {
-        inMemoryTaskManager.clearTasks();
+        super.clearTasks();
         save();
     }
 
     @Override
     public void clearEpicTasks() {
-        inMemoryTaskManager.clearEpicTasks();
+        super.clearEpicTasks();
         save();
     }
 
     @Override
     public void clearSubTasks() {
-        inMemoryTaskManager.clearSubTasks();
+        super.clearSubTasks();
         save();
     }
 
     @Override
     public Task getTask(int taskId) {
-        Task result = inMemoryTaskManager.getTask(taskId);
+        Task result = super.getTask(taskId);
         save();
         return  result;
     }
 
     @Override
     public EpicTask getEpicTask(int taskId) {
-        EpicTask result = inMemoryTaskManager.getEpicTask(taskId);
+        EpicTask result = super.getEpicTask(taskId);
         save();
         return  result;
     }
 
     @Override
     public SubTask getSubTask(int taskId) {
-        SubTask result = inMemoryTaskManager.getSubTask(taskId);
+        SubTask result = super.getSubTask(taskId);
         save();
         return  result;
     }
 
     @Override
     public boolean updateTask(Task taskDonor) {
-        boolean result = inMemoryTaskManager.updateTask(taskDonor);
+        boolean result = super.updateTask(taskDonor);
         save();
         return result;
     }
 
     @Override
     public boolean updateEpicTask(EpicTask epicTaskDonor) {
-        boolean result = inMemoryTaskManager.updateEpicTask(epicTaskDonor);
+        boolean result = super.updateEpicTask(epicTaskDonor);
         save();
         return result;
     }
 
     @Override
     public boolean updateSubTask(SubTask subTaskDonor) {
-        boolean result = inMemoryTaskManager.updateSubTask(subTaskDonor);
+        boolean result = super.updateSubTask(subTaskDonor);
         save();
         return result;
     }
 
     @Override
     public Task removeTask(int taskId) {
-        Task result = inMemoryTaskManager.removeTask(taskId);
+        Task result = super.removeTask(taskId);
         save();
         return  result;
     }
 
     @Override
     public SubTask removeSubTask(int taskId) {
-        SubTask result = inMemoryTaskManager.removeSubTask(taskId);
+        SubTask result = super.removeSubTask(taskId);
         save();
         return  result;
     }
 
     @Override
     public EpicTask removeEpicTask(int taskId) {
-        EpicTask result = inMemoryTaskManager.removeEpicTask(taskId);
+        EpicTask result = super.removeEpicTask(taskId);
         save();
         return  result;
     }
 
     @Override
     public Task addTask(Task task) {
-        Task result = inMemoryTaskManager.addTask(task);
+        Task result = super.addTask(task);
         save();
         return result;
     }
 
     @Override
     public EpicTask addEpicTask(EpicTask task) {
-        EpicTask result = inMemoryTaskManager.addEpicTask(task);
+        EpicTask result = super.addEpicTask(task);
         save();
         return result;
     }
 
     @Override
     public SubTask addSubTask(SubTask task) {
-        SubTask result = inMemoryTaskManager.addSubTask(task);
+        SubTask result = super.addSubTask(task);
         save();
         return result;
     }
 
     @Override
     public List<Task> getHistory() {
-        return inMemoryTaskManager.getHistory();
+        return super.getHistory();
     }
 
     private void save() {
@@ -156,8 +156,7 @@ public class FileBackedTasksManager implements TaskManager {
             taskFileSaver.saveTasks(getAllTasks());
             taskFileSaver.saveHistory(getHistory());
         } catch (IOException exception) {
-            System.out.println("Произошла ошибка при попытке сохарнить данные в файл: " + fileName);
-            System.out.println(exception.getMessage());
+            throw new ManagerSaveException("Произошла ошибка при попытке считать данные из файла: " + fileName);
         }
     }
 
@@ -171,8 +170,7 @@ public class FileBackedTasksManager implements TaskManager {
             tasks = taskCSVLoader.loadDataFromFile(historyManager);
             addUndefinedTasks(tasks, tasksManager);
         } catch (IOException exception) {
-            System.out.println("Произошла ошибка при попытке считать данные из файла: " + file.getAbsolutePath());
-            System.out.println(exception.getMessage());
+            throw new ManagerSaveException("Произошла ошибка при попытке считать данные из файла: " + file.getAbsolutePath());
         }
 
         return tasksManager;
