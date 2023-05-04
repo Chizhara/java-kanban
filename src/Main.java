@@ -5,12 +5,17 @@ import model.EpicTask;
 import model.SubTask;
 import model.Task;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Random;
 
 public class Main {
 
     public static void main(String[] args) {
+
+        /*
         System.out.println("Поехали!");
         FileBackedTasksManager inMemoryTaskManager = new FileBackedTasksManager(Managers.getDefaultHistory(), "filereader.txt");
         createTasks(inMemoryTaskManager);
@@ -22,10 +27,10 @@ public class Main {
         File file = new File("filereader.txt");
         System.out.println("Считывание из файла");
         FileBackedTasksManager fileBackedTasksManagerSecond = FileBackedTasksManager.loadFromFile(file);
-        printTasks(fileBackedTasksManagerSecond);
+        printTasks(fileBackedTasksManagerSecond); */
     }
 
-    private static void createTasks(TaskManager inMemoryTaskManager) {
+    /* static void createTasks(TaskManager inMemoryTaskManager) {
         Task taskA = new Task(null ,"TaskA", "NormalTask");
         Task taskB = new Task(null ,"TaskB", "NormalTask");
 
@@ -97,5 +102,5 @@ public class Main {
 
             System.out.println("\n");
         }
-    }
+    }*/
 }

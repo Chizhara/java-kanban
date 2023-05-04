@@ -5,6 +5,7 @@ import model.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,18 +40,33 @@ public class TaskCSVLoader {
         String name = taskAttributes[2];
         TaskStatus status = TaskStatus.valueOf(taskAttributes[3]);
         String description = taskAttributes[4];
+        String startTimeLine = taskAttributes[5];
+        String durationLine = taskAttributes[6];
+        Integer duration;
+        Instant startTime;
+        if(durationLine.equals("null")) {
+            duration = null;
+        } else {
+            duration = Integer.parseInt(durationLine);
+        }
+
+        if(startTimeLine.equals("null")) {
+            startTime = null;
+        } else {
+            startTime = Instant.parse(startTimeLine);
+        }
 
         switch (type) {
             case TASK:
-                result = new Task(id, name, description);
+                result = new Task(id, name, description, startTime, duration);
                 result.setStatus(status);
                 break;
             case EPIC_TASK:
-                result = new EpicTask(id, name, description);
+                result = new EpicTask(id, name, description, startTime, duration);
                 break;
             case SUB_TASK:
-                int epicId = Integer.parseInt(taskAttributes[5]);
-                result = new SubTask(id, name, description, epicId);
+                int epicId = Integer.parseInt(taskAttributes[7]);
+                result = new SubTask(id, name, description, epicId, startTime, duration);
                 result.setStatus(status);
                 break;
             default:

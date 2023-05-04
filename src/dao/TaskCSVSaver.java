@@ -21,8 +21,8 @@ public class TaskCSVSaver {
 
     private String formatTaskToLine(Task task) {
         StringBuilder result = new StringBuilder();
-        result.append(String.format("%d,%s,%s,%s,%s" ,task.getId(), task.getTaskType(), task.getName(),
-                task.getStatus(), task.getDescription()));
+        result.append(String.format("%d,%s,%s,%s,%s,%s,%s" ,task.getId(), task.getTaskType(), task.getName(),
+                task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration()));
 
         if(task.getTaskType() == TaskType.SUB_TASK) {
             result.append(',');

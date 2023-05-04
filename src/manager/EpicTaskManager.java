@@ -10,8 +10,6 @@ public class EpicTaskManager {
     private final HashMap<Integer, EpicTask> epicTasks = new HashMap<>();
     private final HashMap<Integer, SubTask> subTasks = new HashMap<>();
 
-    private final ManagerSeq seq;
-
     public HashMap<Integer, EpicTask> getEpicTasks() {
         return epicTasks;
     }
@@ -20,14 +18,8 @@ public class EpicTaskManager {
         return subTasks;
     }
 
-    public EpicTaskManager(ManagerSeq seq) {
-        this.seq = seq;
-    }
-
     public SubTask addSubTask(SubTask subTask) {
         if(epicTasks.containsKey(subTask.getEpicTaskId())){
-            subTask.setId(seq.getNextSeq());
-
             EpicTask epicTask = epicTasks.get(subTask.getEpicTaskId());
             epicTask.addSubTask(subTask);
 
@@ -37,10 +29,8 @@ public class EpicTaskManager {
         return null;
     }
 
-    public EpicTask addEpicTask(EpicTask epicTask) {
-        epicTask.setId(seq.getNextSeq());
+    public void addEpicTask(EpicTask epicTask) {
         epicTasks.put(epicTask.getId() , epicTask);
-        return epicTask;
     }
 
     public boolean updateEpicTask(EpicTask epicTaskDonor) {

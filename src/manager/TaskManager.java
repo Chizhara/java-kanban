@@ -7,8 +7,11 @@ import model.Task;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 public interface TaskManager {
+    Set<Task> getPrioritizedTasks();
+
     List<EpicTask> getEpicTasks();
 
     List<SubTask> getSubTasks();

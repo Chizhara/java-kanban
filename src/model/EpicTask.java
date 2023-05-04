@@ -1,14 +1,17 @@
 package model;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class EpicTask extends Task {
 
     protected ArrayList<SubTask> subTasks;
 
-    public EpicTask(Integer id,String name, String description) {
-        super(id , name, description);
+    public EpicTask(Integer id,String name, String description, Instant startTime, Integer duration) {
+        super(id , name, description, startTime, duration);
         taskType = TaskType.EPIC_TASK;
         subTasks = new ArrayList<>();
     }
@@ -64,6 +67,46 @@ public class EpicTask extends Task {
                 Objects.equals(description, otherEpicTask.description) &&
                 Objects.equals(getStatus(), otherEpicTask.getStatus()) &&
                 Objects.equals(subTasks, otherEpicTask.subTasks);
+    }
+
+    @Override
+    public Instant getStartTime() {
+        if(subTasks.isEmpty())
+            return null;
+
+        startTime = Instant.MAX;
+
+        for(SubTask subTask : subTasks) {
+            if(startTime.isAfter(subTask.getStartTime())) {
+                startTime = subTask.getStartTime();
+            }
+        }
+
+        return startTime;
+    }
+
+    @Override
+    public Integer getDuration() {
+        if(subTasks.isEmpty()) {
+            return null;
+        }
+
+        duration = 0;
+
+        for(SubTask subTask : subTasks) {
+            duration += subTask.getDuration();
+        }
+
+        return duration;
+    }
+
+    @Override
+    public Instant getEndTime() {
+        if(subTasks.isEmpty()) {
+            return null;
+        }
+
+        return subTasks.stream().max(Comparator.comparing(SubTask::getEndTime)).get().getEndTime();
     }
 
     @Override
