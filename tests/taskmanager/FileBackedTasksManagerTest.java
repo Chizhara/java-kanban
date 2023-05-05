@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
-    private final static String fileName = "fileText.txt";
+    private final static String fileName = "resources/fileText.txt";
 
     static Task taskA;
     static EpicTask epicTaskA;

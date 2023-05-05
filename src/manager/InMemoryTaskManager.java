@@ -8,7 +8,7 @@ import model.*;
 public class InMemoryTaskManager implements TaskManager {
     private final Map<Integer ,Task> tasks;
 
-    Set<Task> prioritizedTasks;
+    private Set<Task> prioritizedTasks;
 
     private final ManagerSeq seq;
 
