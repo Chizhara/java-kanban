@@ -1,4 +1,4 @@
-package manager;
+package manager.history;
 import model.*;
 
 import java.sql.Array;

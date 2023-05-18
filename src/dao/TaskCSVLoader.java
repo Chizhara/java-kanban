@@ -1,6 +1,6 @@
 package dao;
 
-import manager.HistoryManager;
+import manager.history.HistoryManager;
 import model.*;
 
 import java.io.BufferedReader;

@@ -1,6 +1,4 @@
-package manager;
-
-import model.Task;
+package manager.history;
 
 public class Node<T> {
     private T data;

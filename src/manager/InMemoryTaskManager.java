@@ -1,29 +1,29 @@
 package manager;
 
-import java.time.Instant;
 import java.util.*;
 
+import exceptions.ManagerIntersectsException;
+import manager.history.HistoryManager;
 import model.*;
 
 public class InMemoryTaskManager implements TaskManager {
-    private final Map<Integer ,Task> tasks;
+    private final Map<Integer, Task> tasks;
+    private final Set<Task> prioritizedTasks;
 
-    private Set<Task> prioritizedTasks;
+    private int seq;
 
-    private final ManagerSeq seq;
-
-    private final HistoryManager historyManager;
+    protected HistoryManager historyManager;
     private final EpicTaskManager epicTaskManager;
 
     public InMemoryTaskManager(HistoryManager historyManager) {
         this.historyManager = historyManager;
-        seq = new ManagerSeq();
+        seq = 0;
         epicTaskManager = new EpicTaskManager();
         tasks = new HashMap<>();
         prioritizedTasks = new TreeSet<>((task1, task2) -> {
-            if(task2.getStartTime() == null)
+            if (task2.getStartTime() == null)
                 return -1;
-            if(task1.getStartTime() == null)
+            if (task1.getStartTime() == null)
                 return 1;
             return task1.getStartTime().compareTo(task2.getStartTime());
         });
@@ -57,7 +57,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public void clearEpicTasks() {
-        for(EpicTask epicTask : getEpicTasks()) {
+        for (EpicTask epicTask : getEpicTasks()) {
             prioritizedTasks.remove(epicTask);
         }
         prioritizedTasks.removeAll(getTasks());
@@ -74,8 +74,9 @@ public class InMemoryTaskManager implements TaskManager {
     public Task getTask(int taskId) {
         Task task = tasks.get(taskId);
 
-        if(task == null)
+        if (task == null) {
             return null;
+        }
 
         historyManager.add(task);
         return task;
@@ -85,7 +86,7 @@ public class InMemoryTaskManager implements TaskManager {
     public EpicTask getEpicTask(int taskId) {
         EpicTask task = epicTaskManager.getEpicTasks().get(taskId);
 
-        if(task == null)
+        if (task == null)
             return null;
 
         historyManager.add(task);
@@ -96,8 +97,9 @@ public class InMemoryTaskManager implements TaskManager {
     public SubTask getSubTask(int taskId) {
         SubTask task = epicTaskManager.getSubTasks().get(taskId);
 
-        if(task == null)
+        if (task == null) {
             return null;
+        }
 
         historyManager.add(task);
         return task;
@@ -105,24 +107,22 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateTask(Task taskDonor) {
-        if(isHaveIntersects(taskDonor)) {
+        Task taskUpdated = tasks.get(taskDonor.getId());
+
+        if (taskUpdated == null) {
+            return false;
+        }
+        if (isHaveIntersects(taskDonor)) {
             return false;
         }
 
-        Map<Integer, Task> tasks = new HashMap<>(this.tasks);
-        Task taskUpdated = tasks.get(taskDonor.getId());
-
-        if(taskUpdated == null)
-            return false;
-
         taskUpdated.updateTaskValues(taskDonor);
-
         return true;
     }
 
     @Override
     public boolean updateEpicTask(EpicTask epicTaskDonor) {
-        if(isHaveIntersects(epicTaskDonor)) {
+        if (isHaveIntersects(epicTaskDonor)) {
             return false;
         }
         return epicTaskManager.updateEpicTask(epicTaskDonor);
@@ -130,7 +130,7 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public boolean updateSubTask(SubTask subTaskDonor) {
-        if(isHaveIntersects(subTaskDonor)) {
+        if (isHaveIntersects(subTaskDonor)) {
             return false;
         }
         return epicTaskManager.updateSubTask(subTaskDonor);
@@ -170,58 +170,45 @@ public class InMemoryTaskManager implements TaskManager {
 
     @Override
     public Task addTask(Task task) {
-        task.setId(seq.getNextSeq());
-        if(isHaveIntersects(task)) {
-            return null;
-        }
-        tasks.put(seq.getSeq(), task);
-        prioritizedTasks.add(task);
+        task.setId(++seq);
+        tasks.put(task.getId(), task);
+        add(task);
         return task;
     }
 
     @Override
     public EpicTask addEpicTask(EpicTask task) {
-        task.setId(seq.getNextSeq());
-        if(isHaveIntersects(task)) {
-            return null;
-        }
+        task.setId(++seq);
         epicTaskManager.addEpicTask(task);
-        prioritizedTasks.add(task);
         return task;
     }
 
     @Override
     public SubTask addSubTask(SubTask task) {
-        task.setId(seq.getNextSeq());
-        if(isHaveIntersects(task)) {
-            return null;
-        }
-        SubTask subTask = epicTaskManager.addSubTask(task);
-        if(subTask == null) {
-            return null;
-        }
-        prioritizedTasks.add(subTask);
-        return subTask;
+        task.setId(++seq);
+        epicTaskManager.addSubTask(task);
+        add(task);
+        return task;
     }
 
-     public boolean isHaveIntersects(Task checkedTask) {
-        boolean result = false;
-
-        if(checkedTask instanceof EpicTask || checkedTask.getStartTime() == null) {
-            return false;
+    private void add(Task task) {
+        if (isHaveIntersects(task)) {
+            throw new ManagerIntersectsException("Найдено пересечение");
         }
+        prioritizedTasks.add(task);
+    }
 
-        for(Task task : prioritizedTasks) {
-            if(!(task instanceof EpicTask || task.getStartTime() == null
-                    || !task.getId().equals(checkedTask.getId()))) {
-                if(!checkedTask.getStartTime().isAfter(task.getEndTime())
-                        && !checkedTask.getEndTime().isBefore(task.getStartTime())) {
-                        result = true;
-                        break;
-                    }
-                }
+    public boolean isHaveIntersects(Task checkedTask) {
+        for (Task task : prioritizedTasks) {
+            if (task.getId().equals(checkedTask.getId())) {
+                continue;
+            }
+            if (!checkedTask.getStartTime().isAfter(task.getEndTime())
+                    && !checkedTask.getEndTime().isBefore(task.getStartTime())) {
+                return true;
+            }
         }
-        return result;
+        return false;
     }
 
     @Override

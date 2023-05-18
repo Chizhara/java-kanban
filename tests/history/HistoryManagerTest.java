@@ -1,6 +1,6 @@
 package history;
 
-import manager.HistoryManager;
+import manager.history.HistoryManager;
 import model.EpicTask;
 import model.Task;
 import org.junit.jupiter.api.BeforeEach;

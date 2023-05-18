@@ -1,5 +1,7 @@
-package manager;
+package manager.history;
 
+import manager.history.HistoryManager;
+import manager.history.Node;
 import model.Task;
 
 import java.util.*;

@@ -1,6 +1,6 @@
 package history;
 
-import manager.InMemoryHistoryManager;
+import manager.history.InMemoryHistoryManager;
 
 public class InMemoryHistoryManagerTest extends HistoryManagerTest<InMemoryHistoryManager> {
     @Override

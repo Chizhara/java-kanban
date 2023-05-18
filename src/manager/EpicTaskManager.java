@@ -1,5 +1,6 @@
 package manager;
 
+import exceptions.ManagerSubTaskAddException;
 import model.*;
 
 import java.util.ArrayList;
@@ -19,14 +20,14 @@ public class EpicTaskManager {
     }
 
     public SubTask addSubTask(SubTask subTask) {
-        if(epicTasks.containsKey(subTask.getEpicTaskId())){
+        if(epicTasks.containsKey(subTask.getEpicTaskId())) {
             EpicTask epicTask = epicTasks.get(subTask.getEpicTaskId());
             epicTask.addSubTask(subTask);
 
             subTasks.put(subTask.getId(), subTask);
             return subTask;
         }
-        return null;
+        throw new ManagerSubTaskAddException("Отсутсвует идентификатор эпика");
     }
 
     public void addEpicTask(EpicTask epicTask) {

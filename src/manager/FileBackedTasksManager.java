@@ -3,10 +3,10 @@ package manager;
 import dao.TaskCSVLoader;
 import dao.TaskCSVSaver;
 import exceptions.ManagerSaveException;
+import manager.history.HistoryManager;
 import model.*;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
@@ -150,7 +150,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return super.getHistory();
     }
 
-    private void save() {
+    protected void save() {
         try(BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName))) {
             TaskCSVSaver taskFileSaver = new TaskCSVSaver(fileWriter);
             taskFileSaver.saveTasks(getAllTasks());
@@ -176,7 +176,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         return tasksManager;
     }
 
-    private static void addUndefinedTasks(List<Task> tasks, TaskManager tasksManager) {
+    protected static void addUndefinedTasks(List<Task> tasks, TaskManager tasksManager) {
         for(Task task : tasks) {
             switch(task.getTaskType()) {
                 case TASK:

@@ -1,7 +1,7 @@
 package taskmanager;
 
 import manager.FileBackedTasksManager;
-import manager.InMemoryHistoryManager;
+import manager.history.InMemoryHistoryManager;
 import model.EpicTask;
 import model.SubTask;
 import model.Task;
@@ -11,9 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksManager> {
@@ -63,10 +60,6 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
 
     @Test
     void readingCurrentTaskDataFromFile() {
-        taskManager.addTask(taskA);
-        taskManager.addEpicTask(epicTaskA);
-        taskManager.addSubTask(subTaskA);
-
         String fileResult = "1,TASK,TaskA,NEW,TaskA," + taskA.getStartTime() + ",0\n" +
                 "2,EPIC_TASK,EpicTaskA,NEW,EpicTaskA," + epicTaskA.getStartTime() + ",0\n" +
                 "3,SUB_TASK,SubTaskA,NEW,SubTaskA," + subTaskA.getStartTime() + ",0,2";
@@ -76,11 +69,10 @@ public class FileBackedTasksManagerTest extends TaskManagerTest<FileBackedTasksM
         } catch (IOException e) {
             throw new RuntimeException("Ошибка! Файл не найден");
         }
-
         taskManager = FileBackedTasksManager.loadFromFile(new File(fileName));
-
         List<Task> tasks = taskManager.getAllTasks();
         assertNotNull(tasks, "Пустой список задач");
+        epicTaskA.addSubTask(subTaskA);
         assertTrue(tasks.containsAll(List.of(taskA, epicTaskA, subTaskA)), "Неверное считывание задач");
     }
 
