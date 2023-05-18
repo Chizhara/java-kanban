@@ -9,7 +9,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 public class KVTaskClient {
-    String url;
+    private final String url;
     String token;
     public KVTaskClient(String url, int port) {
         this.url = url;
@@ -17,10 +17,6 @@ public class KVTaskClient {
 
     public KVTaskClient(int port) {
         url = "http://localhost:" + port + "/";
-    }
-
-    public void put(String key, String json) {
-
     }
 
     public void register() {

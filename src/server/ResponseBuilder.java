@@ -7,9 +7,9 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 public class ResponseBuilder {
-    ContentTypeHeader header;
-    int rCode;
-    String rBody;
+    private ContentTypeHeader header;
+    private int rCode;
+    private String rBody;
 
     public ResponseBuilder(int rCode, String rBody, ContentTypeHeader contentTypeHeader) {
         this.rCode = rCode;

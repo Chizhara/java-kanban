@@ -221,8 +221,6 @@ public abstract class TaskManagerTest<T extends TaskManager> {
 
         tasks = taskManager.getPrioritizedTasks();
 
-        System.out.println(taskManager.getTasks());
-
         assertNotNull(tasks, "Возвращает пустой список");
         assertEquals(Set.of(taskB, taskC, taskA), tasks, "Возвращает неверный список");
     }

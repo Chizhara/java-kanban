@@ -10,10 +10,11 @@ import model.SubTask;
 import model.Task;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class HttpTaskManager extends FileBackedTasksManager {
-    KVTaskClient kvClient;
-    Gson gson;
+    private final KVTaskClient kvClient;
+    private final Gson gson;
     public HttpTaskManager(String url, Gson gson, HistoryManager historyManager) {
         super(historyManager, "");
         this.gson = gson;
@@ -26,7 +27,7 @@ public class HttpTaskManager extends FileBackedTasksManager {
         kvClient.save("tasks", gson.toJson(getTasks()));
         kvClient.save("epics", gson.toJson(getEpicTasks()));
         kvClient.save("subtasks", gson.toJson(getSubTasks()));
-        kvClient.save("history", gson.toJson(getHistory()));
+        kvClient.save("history", gson.toJson(getHistory().stream().map(Task::getId).collect(Collectors.toList())));
     }
 
     public void load() {
@@ -37,8 +38,8 @@ public class HttpTaskManager extends FileBackedTasksManager {
         String jsonSubTasks = kvClient.load("subtasks");
         tasks.addAll(gson.fromJson(jsonSubTasks, new TypeToken<List<SubTask>>() {}.getType()));
         addUndefinedTasks(tasks, this);
-        String jsonHistory = kvClient.load("tasks");
-        List<Integer> history = gson.fromJson(jsonHistory, new TypeToken<List<Task>>() {}.getType());
+        String jsonHistory = kvClient.load("history");
+        List<Integer> history = gson.fromJson(jsonHistory, new TypeToken<List<Integer>>() {}.getType());
         historyManager = historyFromList(history);
     }
 
