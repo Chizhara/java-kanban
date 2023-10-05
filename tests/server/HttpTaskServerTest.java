@@ -184,7 +184,8 @@ public class HttpTaskServerTest {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<Task> subTaskR = gson.fromJson(response.body(), new TypeToken<List<Task>>() {}.getType());
+            List<Task> subTaskR = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertEquals(subTaskR.size(), 1, "Неккоректная длина списка");
             assertTrue(subTaskR.contains(taskA), "Задача не найдена");
@@ -204,7 +205,8 @@ public class HttpTaskServerTest {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<EpicTask> subTaskR = gson.fromJson(response.body(), new TypeToken<List<EpicTask>>() {}.getType());
+            List<EpicTask> subTaskR = gson.fromJson(response.body(), new TypeToken<List<EpicTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertEquals(subTaskR.size(), 1, "Неккоректная длина списка");
             assertTrue(subTaskR.contains(epicTaskA), "Эпик не найден");
@@ -224,7 +226,8 @@ public class HttpTaskServerTest {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<SubTask> subTasksR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {}.getType());
+            List<SubTask> subTasksR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertEquals(subTasksR.size(), 1, "Неккоректная длина списка");
             assertTrue(subTasksR.contains(subTaskA), "Подзадача не найдена");
@@ -252,7 +255,8 @@ public class HttpTaskServerTest {
                     .GET()
                     .build();
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<Task> tasksR = gson.fromJson(response.body(), new TypeToken<List<Task>>() {}.getType());
+            List<Task> tasksR = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertFalse(tasksR.contains(taskA), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
@@ -279,7 +283,8 @@ public class HttpTaskServerTest {
                     .GET()
                     .build();
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<EpicTask> epicTasksR = gson.fromJson(response.body(), new TypeToken<List<EpicTask>>() {}.getType());
+            List<EpicTask> epicTasksR = gson.fromJson(response.body(), new TypeToken<List<EpicTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertFalse(epicTasksR.contains(epicTaskA), "Эпик найден");
         } catch (IOException | InterruptedException e) {
@@ -306,7 +311,8 @@ public class HttpTaskServerTest {
                     .GET()
                     .build();
             response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<SubTask> subTasksR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {}.getType());
+            List<SubTask> subTasksR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertTrue(subTasksR.isEmpty(), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
@@ -330,7 +336,8 @@ public class HttpTaskServerTest {
                     .GET()
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<Task> tasksR = gson.fromJson(response.body(), new TypeToken<List<Task>>() {}.getType());
+            List<Task> tasksR = gson.fromJson(response.body(), new TypeToken<List<Task>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertTrue(tasksR.isEmpty(), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
@@ -354,7 +361,8 @@ public class HttpTaskServerTest {
                     .GET()
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<EpicTask> epicTasksR = gson.fromJson(response.body(), new TypeToken<List<EpicTask>>() {}.getType());
+            List<EpicTask> epicTasksR = gson.fromJson(response.body(), new TypeToken<List<EpicTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertFalse(epicTasksR.contains(epicTaskA), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
@@ -378,7 +386,8 @@ public class HttpTaskServerTest {
                     .GET()
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<SubTask> subtasksR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {}.getType());
+            List<SubTask> subtasksR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertTrue(subtasksR.isEmpty(), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
@@ -414,7 +423,7 @@ public class HttpTaskServerTest {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertFalse(response.body().isEmpty(), "Подзадача найдена");
-            assertEquals(response.body(), gson.toJson(tasks),"Подзадача найдена");
+            assertEquals(response.body(), gson.toJson(tasks), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
             System.out.println("Ошибка!:" + e.getMessage());
         }
@@ -456,7 +465,7 @@ public class HttpTaskServerTest {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertFalse(response.body().isEmpty(), "Подзадача найдена");
-            assertEquals(response.body(), gson.toJson(tasks),"Подзадача найдена");
+            assertEquals(response.body(), gson.toJson(tasks), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
             System.out.println("Ошибка!:" + e.getMessage());
         }
@@ -471,10 +480,11 @@ public class HttpTaskServerTest {
                     .POST(HttpRequest.BodyPublishers.ofString(gson.toJson(epicTaskA)))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            List<SubTask> subTaskR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {}.getType());
+            List<SubTask> subTaskR = gson.fromJson(response.body(), new TypeToken<List<SubTask>>() {
+            }.getType());
             assertNotNull(response.body(), "Ничего не вернуло");
             assertFalse(response.body().isEmpty(), "Подзадача найдена");
-            assertEquals(subTaskR, List.of(subTaskA),"Подзадача найдена");
+            assertEquals(subTaskR, List.of(subTaskA), "Подзадача найдена");
         } catch (IOException | InterruptedException e) {
             System.out.println("Ошибка!:" + e.getMessage());
         }

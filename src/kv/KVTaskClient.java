@@ -11,6 +11,7 @@ import java.net.http.HttpResponse;
 public class KVTaskClient {
     private final String url;
     String token;
+
     public KVTaskClient(String url, int port) {
         this.url = url;
     }

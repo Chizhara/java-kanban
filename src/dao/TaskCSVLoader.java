@@ -11,6 +11,7 @@ import java.util.List;
 
 public class TaskCSVLoader {
     BufferedReader fileReader;
+
     public TaskCSVLoader(BufferedReader fileReader) {
         this.fileReader = fileReader;
     }
@@ -18,9 +19,9 @@ public class TaskCSVLoader {
     public List<Task> loadDataFromFile(HistoryManager historyManager) throws IOException {
         List<Task> tasks = new ArrayList<>();
 
-        while(fileReader.ready()) {
+        while (fileReader.ready()) {
             String line = fileReader.readLine();
-            if(!line.isBlank()) {
+            if (!line.isBlank()) {
                 tasks.add(taskFromCSVString(line));
             } else {
                 line = fileReader.readLine();
@@ -44,13 +45,13 @@ public class TaskCSVLoader {
         String durationLine = taskAttributes[6];
         Integer duration;
         Instant startTime;
-        if(durationLine.equals("null")) {
+        if (durationLine.equals("null")) {
             duration = null;
         } else {
             duration = Integer.parseInt(durationLine);
         }
 
-        if(startTimeLine.equals("null")) {
+        if (startTimeLine.equals("null")) {
             startTime = null;
         } else {
             startTime = Instant.parse(startTimeLine);
@@ -78,10 +79,10 @@ public class TaskCSVLoader {
 
     private void historyFromCSVString(String line, HistoryManager historyManager, List<Task> tasks) {
         String[] taskIdLines = line.split(",");
-        for(int i = taskIdLines.length - 1; i >= 0; i--) {
+        for (int i = taskIdLines.length - 1; i >= 0; i--) {
             int taskId = Integer.parseInt(taskIdLines[i]);
-            for(Task task : tasks) {
-                if(task.getId() == taskId)
+            for (Task task : tasks) {
+                if (task.getId() == taskId)
                     historyManager.add(task);
             }
         }

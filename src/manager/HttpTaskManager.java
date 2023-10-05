@@ -15,6 +15,7 @@ import java.util.stream.Collectors;
 public class HttpTaskManager extends FileBackedTasksManager {
     private final KVTaskClient kvClient;
     private final Gson gson;
+
     public HttpTaskManager(String url, Gson gson, HistoryManager historyManager) {
         super(historyManager, "");
         this.gson = gson;
@@ -32,22 +33,26 @@ public class HttpTaskManager extends FileBackedTasksManager {
 
     public void load() {
         String jsonTasks = kvClient.load("tasks");
-        List<Task> tasks = gson.fromJson(jsonTasks, new TypeToken<List<Task>>() {}.getType());
+        List<Task> tasks = gson.fromJson(jsonTasks, new TypeToken<List<Task>>() {
+        }.getType());
         String jsonEpics = kvClient.load("epics");
-        tasks.addAll(gson.fromJson(jsonEpics, new TypeToken<List<EpicTask>>() {}.getType()));
+        tasks.addAll(gson.fromJson(jsonEpics, new TypeToken<List<EpicTask>>() {
+        }.getType()));
         String jsonSubTasks = kvClient.load("subtasks");
-        tasks.addAll(gson.fromJson(jsonSubTasks, new TypeToken<List<SubTask>>() {}.getType()));
+        tasks.addAll(gson.fromJson(jsonSubTasks, new TypeToken<List<SubTask>>() {
+        }.getType()));
         addUndefinedTasks(tasks, this);
         String jsonHistory = kvClient.load("history");
-        List<Integer> history = gson.fromJson(jsonHistory, new TypeToken<List<Integer>>() {}.getType());
+        List<Integer> history = gson.fromJson(jsonHistory, new TypeToken<List<Integer>>() {
+        }.getType());
         historyManager = historyFromList(history);
     }
 
     private HistoryManager historyFromList(List<Integer> tasksId) {
         HistoryManager historyManager = new InMemoryHistoryManager();
-        for(int i = tasksId.size() - 1; i >= 0; i--) {
-            for(Task task : getAllTasks()) {
-                if(task.getId().equals(tasksId.get(i))) {
+        for (int i = tasksId.size() - 1; i >= 0; i--) {
+            for (Task task : getAllTasks()) {
+                if (task.getId().equals(tasksId.get(i))) {
                     historyManager.add(task);
                 }
             }

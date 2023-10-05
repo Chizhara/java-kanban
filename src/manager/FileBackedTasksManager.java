@@ -11,6 +11,7 @@ import java.util.List;
 
 public class FileBackedTasksManager extends InMemoryTaskManager {
     private final String fileName;
+
     public FileBackedTasksManager(HistoryManager historyManager, String fileName) {
         super(historyManager);
         this.fileName = fileName;
@@ -35,7 +36,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
         List<Task> tasks = getTasks();
         tasks.addAll(getEpicTasks());
         tasks.addAll(getSubTasks());
-        return  tasks;
+        return tasks;
     }
 
     @Override
@@ -65,21 +66,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public Task getTask(int taskId) {
         Task result = super.getTask(taskId);
         save();
-        return  result;
+        return result;
     }
 
     @Override
     public EpicTask getEpicTask(int taskId) {
         EpicTask result = super.getEpicTask(taskId);
         save();
-        return  result;
+        return result;
     }
 
     @Override
     public SubTask getSubTask(int taskId) {
         SubTask result = super.getSubTask(taskId);
         save();
-        return  result;
+        return result;
     }
 
     @Override
@@ -107,21 +108,21 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     public Task removeTask(int taskId) {
         Task result = super.removeTask(taskId);
         save();
-        return  result;
+        return result;
     }
 
     @Override
     public SubTask removeSubTask(int taskId) {
         SubTask result = super.removeSubTask(taskId);
         save();
-        return  result;
+        return result;
     }
 
     @Override
     public EpicTask removeEpicTask(int taskId) {
         EpicTask result = super.removeEpicTask(taskId);
         save();
-        return  result;
+        return result;
     }
 
     @Override
@@ -151,7 +152,7 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     protected void save() {
-        try(BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName))) {
+        try (BufferedWriter fileWriter = new BufferedWriter(new FileWriter(fileName))) {
             TaskCSVSaver taskFileSaver = new TaskCSVSaver(fileWriter);
             taskFileSaver.saveTasks(getAllTasks());
             taskFileSaver.saveHistory(getHistory());
@@ -177,8 +178,8 @@ public class FileBackedTasksManager extends InMemoryTaskManager {
     }
 
     protected static void addUndefinedTasks(List<Task> tasks, TaskManager tasksManager) {
-        for(Task task : tasks) {
-            switch(task.getTaskType()) {
+        for (Task task : tasks) {
+            switch (task.getTaskType()) {
                 case TASK:
                     tasksManager.addTask(task);
                     break;

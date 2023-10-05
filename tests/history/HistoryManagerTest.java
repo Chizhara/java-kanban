@@ -12,7 +12,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public abstract class HistoryManagerTest <T extends HistoryManager> {
+public abstract class HistoryManagerTest<T extends HistoryManager> {
     T historyManager;
     List<Task> tasks;
 
@@ -23,9 +23,9 @@ public abstract class HistoryManagerTest <T extends HistoryManager> {
         init();
 
         tasks = new ArrayList<>();
-        tasks.add(new Task(1 ,"TaskA", "TaskA", null, null));
-        tasks.add(new EpicTask(3 ,"EpicTask", "EpicTask", null, null));
-        tasks.add(new Task(2 ,"TaskB", "TaskB", null, null));
+        tasks.add(new Task(1, "TaskA", "TaskA", null, null));
+        tasks.add(new EpicTask(3, "EpicTask", "EpicTask", null, null));
+        tasks.add(new Task(2, "TaskB", "TaskB", null, null));
     }
 
     @Test
@@ -51,7 +51,7 @@ public abstract class HistoryManagerTest <T extends HistoryManager> {
 
     @Test
     void historyManagerRemoveFromBeginning() {
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             historyManager.add(task);
         }
 
@@ -63,7 +63,7 @@ public abstract class HistoryManagerTest <T extends HistoryManager> {
 
     @Test
     void historyManagerRemoveFromMiddle() {
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             historyManager.add(task);
         }
 
@@ -75,7 +75,7 @@ public abstract class HistoryManagerTest <T extends HistoryManager> {
 
     @Test
     void historyManagerRemoveFromEnd() {
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             historyManager.add(task);
         }
 

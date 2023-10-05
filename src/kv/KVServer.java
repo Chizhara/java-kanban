@@ -1,6 +1,7 @@
 package kv;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,8 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class KVServer {
     public static final int PORT = 8078;
@@ -34,7 +34,7 @@ public class KVServer {
                 h.sendResponseHeaders(403, 0);
                 return;
             }
-            if("GET".equals(h.getRequestMethod())) {
+            if ("GET".equals(h.getRequestMethod())) {
                 String key = h.getRequestURI().getPath().substring("/save/".length());
                 if (key.isEmpty()) {
                     System.out.println("Key для сохранения пустой. key указывается в пути: /save/{key}");
@@ -58,7 +58,6 @@ public class KVServer {
         } finally {
             h.close();
         }
-        // TODO Добавьте получение значения по ключу
     }
 
     private void save(HttpExchange h) throws IOException {

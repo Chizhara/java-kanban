@@ -7,7 +7,6 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import manager.history.HistoryManager;
 import manager.history.InMemoryHistoryManager;
-import server.HttpTaskServer;
 
 import java.io.File;
 import java.io.IOException;

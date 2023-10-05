@@ -20,7 +20,7 @@ public class EpicTaskManager {
     }
 
     public SubTask addSubTask(SubTask subTask) {
-        if(epicTasks.containsKey(subTask.getEpicTaskId())) {
+        if (epicTasks.containsKey(subTask.getEpicTaskId())) {
             EpicTask epicTask = epicTasks.get(subTask.getEpicTaskId());
             epicTask.addSubTask(subTask);
 
@@ -31,13 +31,13 @@ public class EpicTaskManager {
     }
 
     public void addEpicTask(EpicTask epicTask) {
-        epicTasks.put(epicTask.getId() , epicTask);
+        epicTasks.put(epicTask.getId(), epicTask);
     }
 
     public boolean updateEpicTask(EpicTask epicTaskDonor) {
         EpicTask taskUpdated = epicTasks.get(epicTaskDonor.getId());
 
-        if(taskUpdated == null)
+        if (taskUpdated == null)
             return false;
 
         taskUpdated.updateTaskValues(epicTaskDonor);
@@ -49,7 +49,7 @@ public class EpicTaskManager {
     public boolean updateSubTask(SubTask subTaskDonor) {
         SubTask taskUpdated = subTasks.get(subTaskDonor.getId());
 
-        if(taskUpdated == null)
+        if (taskUpdated == null)
             return false;
 
         taskUpdated.updateTaskValues(subTaskDonor);
@@ -61,8 +61,8 @@ public class EpicTaskManager {
     public SubTask removeSubTask(Integer subTaskId) {
         SubTask subTask = subTasks.get(subTaskId);
 
-        if(subTask == null)
-            return  null;
+        if (subTask == null)
+            return null;
 
         epicTasks.get(subTask.getEpicTaskId()).removeSubTask(subTask);
         return subTasks.remove(subTask.getId());
@@ -74,7 +74,7 @@ public class EpicTaskManager {
     }
 
     public void removeSubTasksOfEpic(EpicTask epicTask) {
-        for(SubTask subTask : epicTask.getSubTasks())
+        for (SubTask subTask : epicTask.getSubTasks())
             subTasks.remove(subTask.getId());
     }
 
@@ -86,16 +86,16 @@ public class EpicTaskManager {
     public void clearSubTasks() {
         subTasks.clear();
 
-        for(EpicTask epicTask : epicTasks.values())
+        for (EpicTask epicTask : epicTasks.values())
             epicTask.getSubTasks().clear();
     }
 
     private void updateSubTasksListOfEpic(EpicTask epicTaskUpdated, ArrayList<SubTask> subTasksDonor) {
-        if(!epicTaskUpdated.getSubTasks().equals(subTasksDonor))
+        if (!epicTaskUpdated.getSubTasks().equals(subTasksDonor))
             return;
 
-        for(SubTask subTask : subTasksDonor)
-            if(subTasks.containsKey(subTask.getId()))
+        for (SubTask subTask : subTasksDonor)
+            if (subTasks.containsKey(subTask.getId()))
                 updateSubTaskEpic(subTask, epicTaskUpdated);
     }
 

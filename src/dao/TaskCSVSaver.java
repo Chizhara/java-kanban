@@ -14,17 +14,17 @@ public class TaskCSVSaver {
     }
 
     public void saveTasks(List<Task> tasks) throws IOException {
-        for(Task task : tasks) {
+        for (Task task : tasks) {
             fileWriter.write(formatTaskToLine(task));
         }
     }
 
     private String formatTaskToLine(Task task) {
         StringBuilder result = new StringBuilder();
-        result.append(String.format("%d,%s,%s,%s,%s,%s,%s" ,task.getId(), task.getTaskType(), task.getName(),
+        result.append(String.format("%d,%s,%s,%s,%s,%s,%s", task.getId(), task.getTaskType(), task.getName(),
                 task.getStatus(), task.getDescription(), task.getStartTime(), task.getDuration()));
 
-        if(task.getTaskType() == TaskType.SUB_TASK) {
+        if (task.getTaskType() == TaskType.SUB_TASK) {
             result.append(',');
             result.append(((SubTask) task).getEpicTaskId());
         }
@@ -36,7 +36,7 @@ public class TaskCSVSaver {
     public void saveHistory(List<Task> history) throws IOException {
         StringBuilder historyLine = new StringBuilder();
         historyLine.append('\n');
-        for(Task task : history) {
+        for (Task task : history) {
             historyLine.append(task.getId().toString());
             historyLine.append(',');
         }

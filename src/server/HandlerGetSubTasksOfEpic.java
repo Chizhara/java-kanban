@@ -3,13 +3,11 @@ package server;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import manager.FileBackedTasksManager;
 import manager.TaskManager;
 import model.SubTask;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Objects;
 
 public class HandlerGetSubTasksOfEpic implements HttpHandler {
     private final TaskManager taskManager;

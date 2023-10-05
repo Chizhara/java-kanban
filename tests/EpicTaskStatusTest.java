@@ -8,7 +8,6 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -19,30 +18,30 @@ public class EpicTaskStatusTest {
 
     @BeforeAll
     static void initSubTasks() {
-        epicTask = new EpicTask(1 ,"EpicTaskA", "EpicTask", null, null);
+        epicTask = new EpicTask(1, "EpicTaskA", "EpicTask", null, null);
         subTasks = new ArrayList<>();
 
-        subTasks.add(new SubTask(2 ,"SubTaskA", "SubTask", epicTask.getId(),
+        subTasks.add(new SubTask(2, "SubTaskA", "SubTask", epicTask.getId(),
                 Instant.MAX.minusSeconds(100000), 2));
-        subTasks.add(new SubTask(3 ,"SubTaskB", "SubTask", epicTask.getId(),
+        subTasks.add(new SubTask(3, "SubTaskB", "SubTask", epicTask.getId(),
                 Instant.MAX.minusSeconds(300000), 3));
-        subTasks.add(new SubTask(4 ,"SubTaskC", "SubTask", epicTask.getId(),
+        subTasks.add(new SubTask(4, "SubTaskC", "SubTask", epicTask.getId(),
                 Instant.MAX.minusSeconds(200000), 1));
 
-        for(SubTask subTask : subTasks) {
+        for (SubTask subTask : subTasks) {
             epicTask.addSubTask(subTask);
         }
     }
 
     @Test
     public void shouldBeNewWhenSubTasksEmpty() {
-        EpicTask epicTaskOwn = new EpicTask(5 ,"EpicTaskA", "EpicTask", null, null);
+        EpicTask epicTaskOwn = new EpicTask(5, "EpicTaskA", "EpicTask", null, null);
         assertEquals(TaskStatus.NEW, epicTaskOwn.getStatus());
     }
 
     @Test
     public void shouldBeNewWhenSubTasksNew() {
-        for(SubTask subTask : subTasks) {
+        for (SubTask subTask : subTasks) {
             subTask.setStatus(TaskStatus.NEW);
         }
 
@@ -51,7 +50,7 @@ public class EpicTaskStatusTest {
 
     @Test
     public void shouldBeNewWhenSubTasksDone() {
-        for(SubTask subTask : subTasks) {
+        for (SubTask subTask : subTasks) {
             subTask.setStatus(TaskStatus.DONE);
         }
 
@@ -60,7 +59,7 @@ public class EpicTaskStatusTest {
 
     @Test
     public void shouldBeNewWhenSubTasksNewAndDone() {
-        for(SubTask subTask : subTasks) {
+        for (SubTask subTask : subTasks) {
             subTask.setStatus(TaskStatus.NEW);
         }
         subTasks.get(0).setStatus(TaskStatus.DONE);
@@ -70,7 +69,7 @@ public class EpicTaskStatusTest {
 
     @Test
     public void shouldBeNewWhenSubTasksInProgress() {
-        for(SubTask subTask : subTasks) {
+        for (SubTask subTask : subTasks) {
             subTask.setStatus(TaskStatus.IN_PROGRESS);
         }
 
@@ -89,11 +88,11 @@ public class EpicTaskStatusTest {
         Integer duration = epicTask.getDuration();
         Integer subTasksDuration = 0;
 
-        for(SubTask subTask : subTasks) {
+        for (SubTask subTask : subTasks) {
             subTasksDuration += subTask.getDuration();
         }
         assertNotNull(duration, "Возвращает null значение");
-        assertEquals(duration,  subTasksDuration , "Возвращает неверное значение");
+        assertEquals(duration, subTasksDuration, "Возвращает неверное значение");
     }
 
     @Test
@@ -101,6 +100,6 @@ public class EpicTaskStatusTest {
         Instant endTime = epicTask.getEndTime();
         Instant lastEndTime = subTasks.stream().max(Comparator.comparing(SubTask::getEndTime)).get().getEndTime();
         assertNotNull(endTime, "Возвращает null значение");
-        assertEquals(endTime,  lastEndTime , "Возвращает неверное значение");
+        assertEquals(endTime, lastEndTime, "Возвращает неверное значение");
     }
 }

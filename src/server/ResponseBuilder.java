@@ -22,7 +22,7 @@ public class ResponseBuilder {
     }
 
     public void writeResponse(HttpExchange exchange) throws IOException {
-        if(rBody.isBlank()) {
+        if (rBody.isBlank()) {
             exchange.sendResponseHeaders(rCode, 0);
         } else {
             header.setHeader(exchange.getResponseHeaders());

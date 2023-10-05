@@ -20,6 +20,7 @@ public class TaskHandler implements HttpHandler {
     private String[] pathParts;
     private final TaskManager taskManager;
     private final Gson gson;
+
     public TaskHandler(TaskManager taskManager, Gson gson) {
         this.taskManager = taskManager;
         this.gson = gson;
@@ -62,11 +63,11 @@ public class TaskHandler implements HttpHandler {
     private Target getRequestTarget(String requestMethod) {
         String lastPart = pathParts[pathParts.length - 1];
 
-        if(lastPart.equals("tasks") && pathParts.length == 2 && requestMethod.equals("GET")) {
+        if (lastPart.equals("tasks") && pathParts.length == 2 && requestMethod.equals("GET")) {
             return Target.GET_PRIORITIZED_TASKS;
-        } else if(lastPart.equals("history") && pathParts.length == 3 && requestMethod.equals("GET")) {
+        } else if (lastPart.equals("history") && pathParts.length == 3 && requestMethod.equals("GET")) {
             return Target.GET_HISTORY;
-        } else if(pathParts.length == 3 || pathParts.length == 4) {
+        } else if (pathParts.length == 3 || pathParts.length == 4) {
             switch (requestMethod) {
                 case "POST":
                     return Target.POST;
@@ -104,7 +105,7 @@ public class TaskHandler implements HttpHandler {
     }
 
     private ResponseBuilder handlePost(HttpExchange exchange, TaskType taskType) throws IOException {
-        if(pathParts.length != 3) {
+        if (pathParts.length != 3) {
             System.out.println("Пользователь неверно указал эндпоинт: " + exchange.getRequestURI());
             return new ResponseBuilder(400, "Некорректный эндпоинт",
                     ContentTypeHeader.TEXT);
@@ -113,11 +114,11 @@ public class TaskHandler implements HttpHandler {
             String bodyJson = new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8);
             Task task = getPostedTask(taskType, bodyJson);
             return new ResponseBuilder(200, gson.toJson(task), ContentTypeHeader.JSON);
-        } catch(NullPointerException ex) {
+        } catch (NullPointerException ex) {
             System.out.println("Пользователь неверно указал эндпоинт как тип задачи:" + exchange.getRequestURI());
             return new ResponseBuilder(400, "Неверно указан тип задачи: " + pathParts[2],
                     ContentTypeHeader.TEXT);
-        } catch(JsonSyntaxException ex) {
+        } catch (JsonSyntaxException ex) {
             System.out.println("Пользователь неверно указал эндпоинт как тип задачи:" + exchange.getRequestURI());
             return new ResponseBuilder(404, "Переданы некорректные данны", ContentTypeHeader.TEXT);
         } catch (ManagerIntersectsException ex) {
@@ -133,7 +134,7 @@ public class TaskHandler implements HttpHandler {
         switch (taskType) {
             case TASK:
                 Task task = parseTaskFromJson(taskJson, Task.class);
-                if(isTasksContainsId(taskManager.getTasks(), task.getId())) {
+                if (isTasksContainsId(taskManager.getTasks(), task.getId())) {
                     taskManager.updateTask(task);
                 } else {
                     taskManager.addTask(task);
@@ -141,7 +142,7 @@ public class TaskHandler implements HttpHandler {
                 return task;
             case SUB_TASK:
                 SubTask subTask = parseTaskFromJson(taskJson, SubTask.class);
-                if(isTasksContainsId(taskManager.getSubTasks(), subTask.getId())) {
+                if (isTasksContainsId(taskManager.getSubTasks(), subTask.getId())) {
                     taskManager.updateSubTask(subTask);
                 } else {
                     taskManager.addSubTask(subTask);
@@ -149,7 +150,7 @@ public class TaskHandler implements HttpHandler {
                 return subTask;
             case EPIC_TASK:
                 EpicTask epicTask = parseTaskFromJson(taskJson, EpicTask.class);
-                if(isTasksContainsId(taskManager.getEpicTasks(), epicTask.getId())) {
+                if (isTasksContainsId(taskManager.getEpicTasks(), epicTask.getId())) {
                     taskManager.updateEpicTask(epicTask);
                 } else {
                     taskManager.addEpicTask(epicTask);
@@ -160,9 +161,9 @@ public class TaskHandler implements HttpHandler {
         }
     }
 
-    private<T extends Task> boolean isTasksContainsId(List<T> tasks, int taskId) {
-        for(T task : tasks) {
-            if(task.getId() == taskId) {
+    private <T extends Task> boolean isTasksContainsId(List<T> tasks, int taskId) {
+        for (T task : tasks) {
+            if (task.getId() == taskId) {
                 return true;
             }
         }
@@ -174,11 +175,11 @@ public class TaskHandler implements HttpHandler {
     }
 
     private ResponseBuilder handleGet(TaskType taskType, String rawQuery) {
-        if(!rawQuery.isEmpty()) {
+        if (!rawQuery.isEmpty()) {
             try {
                 Integer id = getTaskIdFromQuery(rawQuery);
                 Task task = handleGetConcreteTaskOfType(taskType, id);
-                if(task == null) {
+                if (task == null) {
                     throw new NullPointerException();
                 }
                 String taskJson = gson.toJson(task);
@@ -187,8 +188,8 @@ public class TaskHandler implements HttpHandler {
                 return new ResponseBuilder(404, "Неверно указан идентификатор задачи",
                         ContentTypeHeader.TEXT);
             } catch (NumberFormatException ex) {
-            return new ResponseBuilder(400, "Вместо идентификатора указано неккоретное значение",
-                    ContentTypeHeader.TEXT);
+                return new ResponseBuilder(400, "Вместо идентификатора указано неккоретное значение",
+                        ContentTypeHeader.TEXT);
             }
         } else {
             return new ResponseBuilder(200, gson.toJson(handleGetTasksOfType(taskType)), ContentTypeHeader.JSON);
@@ -226,10 +227,10 @@ public class TaskHandler implements HttpHandler {
     }
 
     private ResponseBuilder handleDelete(TaskType taskType, String rawQuery) {
-        if(!rawQuery.isEmpty()) {
+        if (!rawQuery.isEmpty()) {
             try {
                 Task task = handleDeleteConcreteTaskOfType(taskType, getTaskIdFromQuery(rawQuery));
-                if(task == null) {
+                if (task == null) {
                     throw new NullPointerException();
                 }
                 String taskJson = gson.toJson(task);
